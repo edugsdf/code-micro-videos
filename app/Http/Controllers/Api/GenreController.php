@@ -1,12 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Genre;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller
 {
+    private $rules = [
+        'name' => 'required|max:255',
+        'is_active' => 'boolean'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +20,7 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Genre::all();
     }
 
     /**
@@ -35,7 +31,8 @@ class GenreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, $this->rules);
+        return Genre::create($request->all());
     }
 
     /**
@@ -46,18 +43,7 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Genre  $genre
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Genre $genre)
-    {
-        //
+        return $genre;
     }
 
     /**
@@ -69,7 +55,9 @@ class GenreController extends Controller
      */
     public function update(Request $request, Genre $genre)
     {
-        //
+        $this->validate($request, $this->rules);
+        $genre->update($request->all());
+        return $genre;
     }
 
     /**
@@ -80,6 +68,7 @@ class GenreController extends Controller
      */
     public function destroy(Genre $genre)
     {
-        //
+        $genre->delete();
+        return response()->noContent(); // 204 - no content
     }
 }
